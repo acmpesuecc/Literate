@@ -6,7 +6,8 @@ const Landing = () => {
     <div>
       <GoogleLogin 
       onSuccess={(credentialResponse) => {console.log(credentialResponse)}} 
-      onError={() => console.log("Failed to login :(")} />
+      onError={() => console.log("Failed to login :(")}
+      width="200px" theme="outline" />
     </div>
   )
 }
