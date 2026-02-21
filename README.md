@@ -1,4 +1,4 @@
-# PROJECT-LITERATE
+# LITERATE
 
 Literate is a PDF reader that works on different platforms. It is built as a Progressive Web App (PWA). The app aims to provide a smooth and easy reading experience on all devices. Users can view, bookmark, and annotate PDF documents. The project also supports keeping track of reading progress, bookmarks, and annotations. This way, users can continue reading without interruption on any platform. The main focus is on simplicity and usability.
 
@@ -15,7 +15,7 @@ Literate is a PDF reader that works on different platforms. It is built as a Pro
 - [Avantika](https://github.com/avantikap07)
 
 
-## Technology Overview:
+## Tech Stack:
 
 - **[React](https://react.dev/blog/2024/12/05/react-19)**: Helps us build an interactive and user friendly interface for reading and managing PDFs.
 
