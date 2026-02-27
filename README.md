@@ -61,5 +61,3 @@ Literate is a Progressive Web App (PWA) PDF reader. The app aims to provide a sm
 - [Anna Maria](https://github.com/annamariacjio-lab)
 - [Krithik V](https://github.com/krithik-vasu)
 - [Avantika](https://github.com/avantikap07)
-
----
