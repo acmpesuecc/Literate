@@ -1,4 +1,5 @@
 import React from 'react'
+import {Outlet} from 'react-router'
 
 import {
   DrivePicker,
@@ -37,9 +38,10 @@ const [showPicker, setShowPicker] = useState(false);
                 )}
 
                 <div id="file-deets">
+        
 
                 </div>
-
+            <Outlet></Outlet>
             </div>
         </div>
     );
