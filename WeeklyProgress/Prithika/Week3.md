@@ -8,3 +8,6 @@ Cloned and studied the MuPDF pre-built React code examples and worked on integra
 1. Picking files locally and feeding it to the MuPDF Webviewer.
 2. Converting Typescript to Javascript
 3. Memory wastage everytime a new pdf is selected and rendered.
+
+**Resources used**
+https://github.com/ArtifexSoftware/mupdf-webviewer-react-sample
