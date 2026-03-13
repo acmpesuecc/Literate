@@ -19,6 +19,7 @@ const [showPicker, setShowPicker] = useState(false);
         const file = e.target.files[0];
 
         if (file) {
+        URL.revokeObjectURL(selectedFile);
         const url = URL.createObjectURL(file);
         console.log("file opening...");
         setSelectedFile(url);
@@ -59,7 +60,7 @@ const [showPicker, setShowPicker] = useState(false);
             </div>
 
             <input onChange={takeFile} type="file" accept=".pdf" />
-            <WebViewer file={selectedFile} />
+            <WebViewer key={selectedFile} file={selectedFile} />
         </div>
     );
 }
