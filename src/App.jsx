@@ -1,15 +1,29 @@
 import React from 'react'
+import WebViewer from "@/components/WebViewer.jsx";
+import { useState } from "react";
 
 import {
   DrivePicker,
   DrivePickerDocsView,
 } from "@googleworkspace/drive-picker-react";
-import {useState} from 'react'
 
 const App = () => {
 const [showPicker, setShowPicker] = useState(false);
   const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 	const APP_ID = import.meta.env.VITE_GOOGLE_APP_ID;
+
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const takeFile = (e) => {
+        const file = e.target.files[0];
+
+        if (file) {
+        const url = URL.createObjectURL(file);
+        console.log("file opening...");
+        setSelectedFile(url);
+        }
+    };
+
     return (
         <div>
             <div>Crazy cool Literate app UI</div>
@@ -39,8 +53,10 @@ const [showPicker, setShowPicker] = useState(false);
                 <div id="file-deets">
 
                 </div>
-
             </div>
+
+            <input onChange={takeFile} type="file" accept=".pdf" />
+            <WebViewer file={selectedFile} />
         </div>
     );
 }
