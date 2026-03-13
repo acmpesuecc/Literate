@@ -2,6 +2,7 @@
 
 ## 13 March 2026
 **Integration of MuPDF**
+---
 Cloned and studied the MuPDF pre-built React code examples and worked on integrating it to Literate in order to render large PDFs. Picked the files locally and then made the object URL for the file. Used event handlers to feed the file to MuPDF Webviewer in order to render it.
 
 **Issues faced**
