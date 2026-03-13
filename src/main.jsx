@@ -5,12 +5,20 @@ import App from './App.jsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import Landing from './Landing.jsx';
+import { Mainview } from './Mainview.jsx'
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const router = createBrowserRouter([
     {path: "/", Component: Landing},
-    {path: "/app", Component: App}
+    {path: "/app", 
+        Component: App,
+    children:[
+        {
+            index:true,
+            Component: Mainview
+        }
+    ]}
 ]);
 
 createRoot(document.getElementById('root')).render(

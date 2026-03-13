@@ -1,4 +1,5 @@
 import React from 'react'
+import {Outlet} from 'react-router'
 import WebViewer from "@/components/WebViewer.jsx";
 import { useState } from "react";
 
@@ -51,8 +52,10 @@ const [showPicker, setShowPicker] = useState(false);
                 )}
 
                 <div id="file-deets">
+        
 
                 </div>
+
             </div>
 
             <input onChange={takeFile} type="file" accept=".pdf" />
