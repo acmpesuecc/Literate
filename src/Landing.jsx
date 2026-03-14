@@ -10,7 +10,7 @@ const Landing = () => {
     <div className="app-container">
       <aside className="sidebar">
         <Link to="/about" className="nav-item">About Us</Link>
-        <div className="nav-item">The Team</div>
+        <Link to= "/team" className="nav-item">The Team</Link>
         <div className="nav-item">
           <GoogleLogin 
           onSuccess={

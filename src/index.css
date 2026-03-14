@@ -33,6 +33,7 @@ body, html
   cursor: pointer;
   text-align: left;
   color: white;
+  text-decoration: none;
 }
 .sidebar {
   width: 300px;
@@ -63,4 +64,45 @@ body, html
   padding-bottom: 10%;
 }
 
+.team-list {
+  color: white;
+  list-style-type: square; /* Changes dots to squares */
+  padding-left: 20px;
+  line-height: 2;         /* Spacing between names */
+}
 
+
+.picker-btn {
+    padding: 20px 60px;
+    border-radius: 12px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: var(--off-white);
+    color: var(--teal-bg);
+    text-transform: uppercase;
+    font-size: 1rem;
+    text-align: left;
+}
+
+
+.file-input-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+
+.viewer-container {
+  flex-grow: 1;
+  background-color: var(--teal-bg);
+  padding: 20px 20px 0 0; /* Creates the 'frame' effect */
+}
+
+.viewer-content {
+  background-color: var(--off-white);
+  height: 100%;
+  border-top-left-radius: 25px; /* Matches your image */
+  border-top-right-radius: 25px;
+  overflow: hidden;
+}
