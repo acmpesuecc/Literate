@@ -104,5 +104,5 @@ body, html
   height: 100%;
   border-top-left-radius: 25px; /* Matches your image */
   border-top-right-radius: 25px;
-  overflow: hidden;
+  overflow: auto;
 }
