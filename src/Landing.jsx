@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import "./index.css";
 import { GoogleLogin } from '@react-oauth/google'
 
@@ -9,7 +9,7 @@ const Landing = () => {
   return (
     <div className="app-container">
       <aside className="sidebar">
-        <div className="nav-item">About Us</div>
+        <Link to="/about" className="nav-item">About Us</Link>
         <div className="nav-item">The Team</div>
         <div className="nav-item">
           <GoogleLogin 
