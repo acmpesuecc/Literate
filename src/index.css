@@ -32,6 +32,35 @@ body, html
   border-bottom: 1px solid var(--border-light);
   cursor: pointer;
   text-align: left;
+  color: white;
+}
+.sidebar {
+  width: 300px;
+  background-color: var(--teal-bg);
+  border-right: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.logo-container {
+  background-color: var(--off-white);
+  border-radius: 3%; /* soft */
+  padding: 40px 20px;
+  margin: 40px auto;
+  width: 450px;
+  text-align: center;
+  color: var(--teal-bg);
+  font-size: 4rem;
+  font-weight: 900;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  
+}
+
+.main-content {
+  padding-left: 10%; 
+  padding-top: 10%;
+  padding-bottom: 10%;
 }
 
 
