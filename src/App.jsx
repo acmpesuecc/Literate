@@ -27,40 +27,54 @@ const [showPicker, setShowPicker] = useState(false);
     };
 
     return (
-        <div>
-            <div>Crazy cool Literate app UI</div>
-            <div>
-                <button onClick={() => setShowPicker(true)}>
-                    Open Picker
-                </button>
-                {showPicker && (
-                    <DrivePicker
-                    client-id={CLIENT_ID}
-                    app-id={APP_ID}
-                    onPicked={(e) => {
-                        document.getElementById("file-deets").textContent = JSON.stringify(e.detail);
-                        console.log(e.detail);
+        <div className="app-container">
+            <aside className="sidebar">
+                <div className="file-input-wrapper">
+                    <button className="picker-btn" onClick={() => setShowPicker(true)}>
+                        Open Picker
+                    </button>
+                    
+                    {showPicker && (
+                        <DrivePicker
+                        client-id={CLIENT_ID}
+                        app-id={APP_ID}
+                        onPicked={(e) => {
+                            document.getElementById("file-deets").textContent = JSON.stringify(e.detail);
+                            console.log(e.detail);
 
-                        //make api request to google drive api to download and view said content of pdf
-                        setShowPicker(false);
-                    }}
-                    onCanceled={() => setShowPicker(false)}
-                    >
-                    <DrivePickerDocsView owned-by-me="true" 
-                        mime-types="application/pdf"
-                    />
-                    </DrivePicker>
-                )}
+                            //make api request to google drive api to download and view said content of pdf
+                            setShowPicker(false);
+                        }}
+                        onCanceled={() => setShowPicker(false)}
+                        >
+                        <DrivePickerDocsView owned-by-me="true" 
+                            mime-types="application/pdf"
+                        />
+                        </DrivePicker>
+                    )}
+                    </div>
+                    
+                    
 
-                <div id="file-deets">
+                    <div id="file-deets">           
+
+                    </div>
+                    
         
+                   
 
-                </div>
+                
 
-            </div>
-
-            <input onChange={takeFile} type="file" accept=".pdf" />
-            <WebViewer key={selectedFile} file={selectedFile} />
+                    <input className="picker-btn" onChange={takeFile} type="file" accept=".pdf" />
+                    </aside>
+                        <main className="viewer-container">
+                            <div className="viewer-content">
+                                <WebViewer key={selectedFile} file={selectedFile} />
+                            </div>
+                        </main>
+                    
+        
+             
         </div>
     );
 }
