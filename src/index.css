@@ -1,0 +1,18 @@
+:root 
+{
+  --teal-bg: #004d40;      
+  --off-white: #f5f5f5;   
+  --accent-blue: #0d47a1; 
+  --border-light: rgba(255, 255, 255, 0.3);
+}/*globally accessible*/
+
+body, html 
+/* root elements */
+{
+  margin: 0;  padding: 0; 
+  /* Removes the browser's default */
+  height: 100%;
+  background-color: var(--teal-bg);
+  font-family: 'Segoe UI', Tahoma; 
+  color: white;
+}
