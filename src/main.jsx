@@ -24,10 +24,10 @@ const router = createBrowserRouter([
     {
         path: "about", 
         element: <div className="text-view">
-            <h1>  About Us</h1>
-                <p>    Most PDF viewers today are either locked to one device or rely on a company's server, which risks your privacy and access if that server goes down which is very risky to our data.</p>
-                <p>    Literate enables users to maintain a unified reading experience across devices without relying on proprietary servers. Users select specific folders within their own cloud storage (starting with Google Drive) to serve as their library..</p>
-            </div>
+            <h1> &nbsp; About Us</h1>
+                <p> &nbsp;   Most PDF viewers today are either locked to one device or rely on a company's server, which risks your privacy and access if that server goes down which is very risky to our data.</p>
+                <p> &nbsp;   Literate enables users to maintain a unified reading experience across devices without relying on proprietary servers. Users select specific folders within their own cloud storage (starting with Google Drive) to serve as their library..</p>
+            </div> //&nbsp; is a HTML entity for a non-breaking space, which is used here to create indentation for the paragraphs.
     },
     {
         path: "team", 
@@ -35,14 +35,14 @@ const router = createBrowserRouter([
             <h1>  The Team</h1>
                 <p>  
                     <ul className="team-list">
-                        <li>Arjun (Mentor)</li>
-                        <li>Hemanth (Mentor)</li>
-                        <li>Gagan (Mentee)</li>
-                        <li>Prithika (Mentee)</li>
-                        <li>Harshul (Mentee)</li>
-                        <li>Avantika (Mentee)</li>
-                        <li>Krithik (Mentee)</li>
-                        <li>Anna (Mentee)</li>
+                        <li>&nbsp;  Arjun (Mentor)</li>
+                        <li>&nbsp;  Hemanth (Mentor)</li>
+                        <li>&nbsp;  Gagan (Mentee)</li>
+                        <li>&nbsp;  Prithika (Mentee)</li>
+                        <li>&nbsp;  Harshul (Mentee)</li>
+                        <li>&nbsp;  Avantika (Mentee)</li>
+                        <li>&nbsp;  Krithik (Mentee)</li>
+                        <li>&nbsp;  Anna (Mentee)</li>
                     </ul>
                 </p>
             </div>
