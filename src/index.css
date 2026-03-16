@@ -103,5 +103,5 @@ p, ul , h1
   
   border-top-left-radius: 25px; 
   border-top-right-radius: 25px;
-
+  overflow: auto;
 }
