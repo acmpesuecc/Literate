@@ -26,26 +26,40 @@ export class MupdfWorker {
     return true;
   }
 
-  renderPageAsImage(pageIndex = 0, scale = 1) {
+  renderPageAsImage(pageIndex = 0,cssWidth, dpr) {
     if (!this.pdfdocument) throw new Error("Document not loaded");
 
     const page = this.pdfdocument.loadPage(pageIndex);
+    const bounds = page.getBounds(); // The "natural" size of the PDF page
+    const pdfWidth  = bounds[2] - bounds[0]; 
+    const pdfHeight = bounds[3] - bounds[1];
 
+    const cssHeight = (pdfHeight / pdfWidth) * cssWidth;
+
+    const scale = (cssWidth / pdfWidth) *dpr;
+    
+    //scale pixmap to ensure there's enough pixels for browser to work with. fixes the resolution
     const pixmap = page.toPixmap(
       [scale, 0, 0, scale, 0, 0],
       mupdf.ColorSpace.DeviceRGB
     );
 
-    const png = pixmap.asPNG();
+    const pngData = pixmap.asPNG();
     pixmap.destroy();
 
-    return png;
+    return{pngData, cssHeight, cssScale: cssWidth / pdfWidth};
   }
 
   getPageCount() {
     if (!this.pdfdocument) throw new Error("Document not loaded");
 
     return this.pdfdocument.countPages();
+  }
+  getStructuredText(pageIndex = 0){
+    if (!this.pdfdocument) throw new Error("Document not loaded");
+
+    const page = this.pdfdocument.loadPage(pageIndex);
+    return JSON.parse(page.toStructuredText("preserve-spans").asJSON());
   }
 }
 

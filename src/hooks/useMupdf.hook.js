@@ -34,12 +34,12 @@ export function useMupdf() {
     return mupdfWorker.current.loadDocument(arrayBuffer);
   }, []);
 
-  const renderPage = useCallback((pageIndex, scale = 1) => {
+  const renderPage = useCallback((pageIndex,cssWidth, dpr) => {
     if (!document.current) {
       throw new Error("Document not loaded");
     }
 
-    return mupdfWorker.current.renderPageAsImage(pageIndex, scale);
+    return mupdfWorker.current.renderPageAsImage(pageIndex,cssWidth, dpr);
   }, []);
 
   const countPages = useCallback(() => {
@@ -49,11 +49,17 @@ export function useMupdf() {
 
     return mupdfWorker.current.getPageCount();
   }, []);
-
+  const structuredText = useCallback((pageIndex=0)=>{
+    if(!document.current){
+      throw new Error("Document not loaded")
+    }
+    return mupdfWorker.current.getStructuredText(pageIndex);
+  },[]);
   return {
     isWorkerInitialized,
     loadDocument,
     renderPage,
     countPages,
+    structuredText,
   };
 }

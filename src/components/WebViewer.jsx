@@ -8,7 +8,7 @@ export default function WebViewer(props) {
   const [docLoaded, setDocLoaded] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
 
-  const { isWorkerInitialized, renderPage, loadDocument, countPages } =
+  const { isWorkerInitialized, renderPage, loadDocument, countPages, structuredText } =
     useMupdf();
 
   const rowHeight = useDynamicRowHeight({
@@ -38,7 +38,7 @@ export default function WebViewer(props) {
     init()
       .then((res) => console.log("Initialized PDF document state: ", res))
       .catch((err) => console.error(err));
-  }, [isWorkerInitialized, loadDocument, renderPage, props.file]);
+  }, [isWorkerInitialized, props.file]);
 
   return (
     <div id="pages">
@@ -47,7 +47,7 @@ export default function WebViewer(props) {
           rowComponent={PageComponent}
           rowCount={totalPages}
           rowHeight={rowHeight}
-          rowProps={{ renderPage, file: props.file }}
+          rowProps={{ renderPage,structuredText, file: props.file , totalPages}}
         />
       )}
     </div>
