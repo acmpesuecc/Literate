@@ -1,27 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import TextOverlay from "./TextOverlay"
+import HighlightOverlay from "./HighlightOverlay"
 
 const dpr = window.devicePixelRatio || 1;
 const cssWidth = 800;
 
-//cache to store textwidth, cuz measureText is expensive
+//import highlights from zustand store
+//this is for my resume ka pdf
+let highlights = [
+    {
+        page: "0",
+        block: "0",
+        line: "0",
+        startOffset: 0,
+        endOffset: 3,
+    }
+]
 
-const textWidthCache = new Map();
-// Measure natural rendered width of text using a hidden canvas
-function measureTextWidth(text, fontStyle, fontWeight, fontSize, fontFamily) {
-  const key = `${text}|${fontStyle}|${fontWeight}|${fontSize}|${fontFamily}`;
-  if (textWidthCache.has(key)) return textWidthCache.get(key);
-  const ctx = document.createElement("canvas").getContext("2d");
-  ctx.font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
-  const width = ctx.measureText(text).width;
-  textWidthCache.set(key, width);
-  return width;
-}
-
+//first lay img, then overlay text, finally overlay the highlights
 export default function PageComponent({ index, renderPage, structuredText, file }) {
   const [url, setUrl] = useState(null);
   const [textData, setTextData] = useState(null);
   const [cssHeight, setCssHeight] = useState(0);
   const [cssScale, setCssScale] = useState(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     let objectUrl;
@@ -34,11 +36,12 @@ export default function PageComponent({ index, renderPage, structuredText, file 
       })
       .catch(console.error);
     structuredText(index)
-      .then(data=>setTextData(data))
+      .then((data)=>setTextData(data))
       .catch(err=>console.error(err));
       
     return () => { if (objectUrl) URL.revokeObjectURL(objectUrl); };
   }, [index, file]);
+
 
   return (
     <div style={{
@@ -49,52 +52,25 @@ export default function PageComponent({ index, renderPage, structuredText, file 
       margin: "15px",
       overflow: "hidden",
       userSelect: "none", //ensure container isnt selected while user is selecting text
-    }}>
-      {url && (
-        <img
-          src={url}
-          width={cssWidth}
-          height={cssHeight}
-          style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none" }} //ensure img doesnt get selected while user is highlighting
-        />
-      )}
+      
+    }}
+    ref={containerRef}
+    >
+        {url && (
+          <img
+            src={url}
+            width={cssWidth}
+            height={cssHeight}
+            style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none" }} //ensure img doesnt get selected while user is highlighting
+          />
+        )}
 
-      {textData && cssScale && textData.blocks.map((block, bIndex) =>
-        block.lines.map((line, lIndex) => {
-          const fontSize = line.font.size * cssScale;
-          const naturalW = measureTextWidth(line.text, line.font.style, line.font.weight, fontSize, line.font.family);
-          const scaleX = naturalW > 0 ? (line.bbox.w * cssScale) / naturalW : 1;
-          
-            // line.y is the baseline. Subtract fontSize to get top of text.
-            // 0.75 is the typical ascender ratio (matches most browser fonts).
-          const top = (line.y - line.font.size * 0.75) * cssScale;
-
-          return (
-            <span
-              key={`${bIndex}-${lIndex}`}
-              style={{
-                position: "absolute",
-                left: line.bbox.x * cssScale,
-                top,
-                fontSize,
-                fontFamily: line.font.family,
-                fontWeight: line.font.weight,
-                fontStyle: line.font.style,
-                whiteSpace: "pre",
-                display: "inline-block",
-                transformOrigin: "left top",
-                transform: `scaleX(${scaleX})`,
-                color: "transparent",
-                lineHeight: 1,
-                userSelect: "text", //ensure only text is selectable
-                cursor: "text",
-              }}
-            >
-              {line.text}
-            </span>
-          );
-        })
-      )}
+        {textData && cssScale &&  
+          <>
+            <TextOverlay textData={textData} cssScale={cssScale} index={index}/>
+            <HighlightOverlay highlights={highlights} containerRef={containerRef}/>
+          </>
+        }
     </div>
   );
 }
