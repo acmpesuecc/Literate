@@ -1,26 +1,55 @@
-//highlights must be imported from zustand store
-//file to create range objects and pass them back to my page component
+export default function createRanges(highlights) {
+  const rangeArray = [];
 
-//helper component iterates over each range and renders a highlight
+  highlights.forEach((segment) => {
+    const id = `${segment.page}-${segment.block}-${segment.line}`;
+    const span = document.getElementById(id);
 
-export default function createRanges(highlights){
-    let rangeArray = [];
-    highlights.forEach(segment=>{
-            //before that i shud try testing if i can create a range from the above
-            //nice it works, so after loading highlights from somewhere, i should run thru the highlights array and do following
-            let highlightRange = document.createRange();
+    if (!span) {
+      console.error("Missing span:", id);
+      return;
+    }
 
-            let id = `${segment.page}-${segment.block}-${segment.line}`
+    // get a usable text node
+    let node = span.firstChild;
 
-            //ill apply highlights on a segment by segment basis
-            const startNodeSpan = document.getElementById(id)
+    // fallback: find first text node if structure changed
+    if (!node || node.nodeType !== Node.TEXT_NODE) {
+      node = Array.from(span.childNodes).find(
+        (n) => n.nodeType === Node.TEXT_NODE
+      );
+    }
 
-            //hopefully each span has only one text node
-            highlightRange.setStart(startNodeSpan.childNodes[0], segment.startOffset) 
-            highlightRange.setEnd(startNodeSpan.childNodes[0], segment.endOffset)
+    if (!node) {
+      console.error("No text node in span:", id);
+      return;
+    }
 
-            rangeArray.push(highlightRange) //store in rangearray
-            console.log("highlighted range", highlightRange);
-    })
-    return rangeArray;
+    const textLength = node.length;
+
+    // clamp offsets
+    let start = Math.max(0, segment.startOffset);
+    let end = Math.max(0, segment.endOffset);
+
+    start = Math.min(start, textLength);
+    end = Math.min(end, textLength);
+
+    // invalid / empty range → skip
+    if (start >= end) {
+      console.warn("Skipping invalid range:", segment);
+      return;
+    }
+
+    try {
+      const range = document.createRange();
+      range.setStart(node, start);
+      range.setEnd(node, end);
+
+      rangeArray.push(range);
+    } catch (err) {
+      console.error("Range creation failed:", segment, err);
+    }
+  });
+
+  return rangeArray;
 }
