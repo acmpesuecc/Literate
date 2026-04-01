@@ -40,38 +40,22 @@ const App = () => {
                         <DrivePicker
                         client-id={CLIENT_ID}
                         app-id={APP_ID}
-                        scopes={['https://www.googleapis.com/auth/drive.readonly']}
                         onPicked={async (e) => {
                             const fileId = e.detail.id;
                             const fileName = e.detail.name;
+
+                            document.getElementById("file-deets").textContent = JSON.stringify(e.detail);
+
+                            console.log(e.detail);
                             
-                            try {
-                                // Get the access token from gapi
-                                const authInstance = gapi.auth2.getAuthInstance();
-                                const currentUser = authInstance.currentUser.get();
-                                const authResponse = currentUser.getAuthResponse();
-                                const accessToken = authResponse.access_token;
-
-                                const response = await fetch(
-                                    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-                                        headers: {
-                                            'Authorization': `Bearer ${accessToken}`
-                                        }
-                                    }
-                                );
-
-                                if (!response.ok) {
-                                    throw new Error(`Failed to fetch file: ${response.statusText}`);
-                                }
-
-                                const blob = await response.blob();
-                                const url = URL.createObjectURL(blob);
-                                setSelectedFile(url);
-                                console.log("PDF loaded from Drive:", fileName);
-                            } catch (error) {
-                                console.error("Error loading file from Drive:", error);
+                            // Access the embedded URL directly from e.detail
+                            const fileUrl = e.detail.url || e.detail.webContentLink || e.detail.webViewLink || e.detail.embededURL;
+                            
+                            if (fileUrl) {
+                                setSelectedFile(fileUrl);
+                                console.log("PDF URL from Drive:", fileUrl);
                             }
-                            
+
                             setShowPicker(false);
                         }}
                         onCanceled={() => setShowPicker(false)}
