@@ -41,22 +41,8 @@ const App = () => {
                         client-id={CLIENT_ID}
                         app-id={APP_ID}
                         onPicked={async (e) => {
-                            const fileId = e.detail.id;
-                            const fileName = e.detail.name;
-
-                            document.getElementById("file-deets").textContent = JSON.stringify(e.detail);
-
-                            console.log(e.detail);
+                            // e.detail.docs is an array, get the first selected file
                             
-                            // Access the embedded URL directly from e.detail
-                            const fileUrl = e.detail.url || e.detail.webContentLink || e.detail.webViewLink || e.detail.embededURL;
-                            
-                            if (fileUrl) {
-                                setSelectedFile(fileUrl);
-                                console.log("PDF URL from Drive:", fileUrl);
-                            }
-
-                            setShowPicker(false);
                         }}
                         onCanceled={() => setShowPicker(false)}
                         >
