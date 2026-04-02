@@ -18,6 +18,7 @@
 ## Issues fixed
 
 -   File now loads and is being rendered nicely by mupdf
+-  BUNCHHH OF MERGE CONFLICTS SMHH , always do ``GIT PULL`` before anything (also the same in all small letters lol)
 
 ## whats left
 
