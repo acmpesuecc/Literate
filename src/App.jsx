@@ -2,7 +2,6 @@ import React from 'react'
 import {Outlet} from 'react-router'
 import WebViewer from "@/components/WebViewer.jsx";
 import { useState } from "react";
-import { gapi } from 'gapi-script';
 
 import {
   DrivePicker,
@@ -41,7 +40,6 @@ const App = () => {
                         client-id={CLIENT_ID}
                         app-id={APP_ID}
                         onPicked={async (e) => {
-<<<<<<< HEAD
                             const pickedData = e.detail;
                             console.log(pickedData);
 
@@ -67,10 +65,6 @@ const App = () => {
                             }
 
                             setShowPicker(false);
-=======
-                            // e.detail.docs is an array, get the first selected file
-                            
->>>>>>> e10c8f62be076b77b021baa11a0cfcd84277621a
                         }}
                         onCanceled={() => setShowPicker(false)}
                         >
@@ -84,17 +78,6 @@ const App = () => {
                     
                 <div id="file-deets">           
 
-<<<<<<< HEAD
-                    
-    
-                    <input className="picker-btn" onChange={takeFile} type="file" accept=".pdf" />
-                    </aside>
-                        <main className="viewer-container">
-                            <div className="viewer-content">
-                                <WebViewer key={selectedFile} file={selectedFile} />
-                            </div>
-                        </main>
-=======
                 </div>
                     
         
@@ -106,8 +89,6 @@ const App = () => {
                     <WebViewer key={selectedFile} file={selectedFile} />
                 </div>
             </main>
->>>>>>> e10c8f62be076b77b021baa11a0cfcd84277621a
-                    
         </div>
     );
 }
