@@ -10,7 +10,6 @@ import {
 
 const App = () => {
     const [showPicker, setShowPicker] = useState(false);
-
     const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 	const APP_ID = import.meta.env.VITE_GOOGLE_APP_ID;
 
