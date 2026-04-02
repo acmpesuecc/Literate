@@ -38,11 +38,31 @@ const [showPicker, setShowPicker] = useState(false);
                         <DrivePicker
                         client-id={CLIENT_ID}
                         app-id={APP_ID}
-                        onPicked={(e) => {
-                            document.getElementById("file-deets").textContent = JSON.stringify(e.detail);
-                            console.log(e.detail);
+                        onPicked={async (e) => {
+                            const pickedData = e.detail;
+                            console.log(pickedData);
 
-                            //make api request to google drive api to download and view said content of pdf
+                            if (pickedData.docs && pickedData.docs.length > 0) {
+                                const fileId = pickedData.docs[0].id;
+                                
+                                try {
+                                    const token = window.gapi.client.getToken().access_token;
+                                    const response = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+                                        headers: {
+                                            'Authorization': `Bearer ${token}`
+                                        }
+                                    });
+                                    
+                                    const arrayBuffer = await response.arrayBuffer();
+                                    const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+                                    const url = URL.createObjectURL(blob);
+                                    URL.revokeObjectURL(selectedFile);
+                                    setSelectedFile(url);
+                                } catch (error) {
+                                    console.error('Error downloading PDF:', error);
+                                }
+                            }
+
                             setShowPicker(false);
                         }}
                         onCanceled={() => setShowPicker(false)}
@@ -56,15 +76,8 @@ const [showPicker, setShowPicker] = useState(false);
                     
                     
 
-                    <div id="file-deets">           
-
-                    </div>
                     
-        
-                   
-
-                
-
+    
                     <input className="picker-btn" onChange={takeFile} type="file" accept=".pdf" />
                     </aside>
                         <main className="viewer-container">
