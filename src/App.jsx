@@ -38,31 +38,11 @@ const [showPicker, setShowPicker] = useState(false);
                         <DrivePicker
                         client-id={CLIENT_ID}
                         app-id={APP_ID}
-                        onPicked={async (e) => {
-                            const pickedData = e.detail;
-                            console.log(pickedData);
-
-                            if (pickedData.docs && pickedData.docs.length > 0) {
-                                const fileId = pickedData.docs[0].id;
-                                
-                                try {
-                                    const token = window.gapi.client.getToken().access_token;
-                                    const response = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-                                        headers: {
-                                            'Authorization': `Bearer ${token}`
-                                        }
-                                    });
-                                    
-                                    const arrayBuffer = await response.arrayBuffer();
-                                    const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-                                    const url = URL.createObjectURL(blob);
-                                    URL.revokeObjectURL(selectedFile);
-                                    setSelectedFile(url);
-                                } catch (error) {
-                                    console.error('Error downloading PDF:', error);
+                        onPicked={async (data) => {
+                            const doc = data.detail.docs[0];
+                            if (doc) {
+                                setSelectedFile(doc.url);
                                 }
-                            }
-
                             setShowPicker(false);
                         }}
                         onCanceled={() => setShowPicker(false)}
