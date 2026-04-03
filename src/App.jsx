@@ -64,6 +64,7 @@ const App = () => {
                                     const url = URL.createObjectURL(blob);
                                     URL.revokeObjectURL(selectedFile);
                                     setSelectedFile(url);
+                                    useStore.getState().setTitle(pickedData.docs[0].name);
                                 } catch (error) {
                                     console.error('Error downloading PDF:', error);
                                 }
@@ -91,7 +92,8 @@ const App = () => {
 
             {/* <main className="viewer-container"> */}
             <main className="container">
-                {title && (
+                {/* {title &&  (*/}
+                {title?.length > 0 && (
                     <div className="viewer-header">
                         <h2>Title:{title}</h2>
                     </div>
