@@ -9,8 +9,6 @@ const Landing = () => {
   return (
     <div className="app-container">
       <aside className="sidebar">
-        <Link to="/about" className="nav-item">About Us</Link>
-        <Link to= "/team" className="nav-item">The Team</Link>
         <div className="nav-item">
           <GoogleLogin 
           onSuccess={
@@ -21,14 +19,16 @@ const Landing = () => {
           onError={() => console.log("Failed to login :(")}
           width="200px" theme="outline" />
         </div>
+        <Link to="/about" className="nav-item">About Us</Link>
+        <Link to= "/team" className="nav-item">The Team</Link>
       </aside>
-      <main className="main-content">
-        
+
+      <main className="container">
         <div className="logo-container">
           LITERATE
         </div>
-      
       </main>
+      
     </div>
   )
 }

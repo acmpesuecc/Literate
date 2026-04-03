@@ -2,6 +2,7 @@ import React from 'react'
 import {Outlet} from 'react-router'
 import WebViewer from "@/components/WebViewer.jsx";
 import { useState } from "react";
+import { useStore } from "store.js";
 
 import {
   DrivePicker,
@@ -25,6 +26,8 @@ const App = () => {
             setSelectedFile(url);
         }
     };
+
+    const title = useStore((state) => state.title);
 
     return (
         <div className="app-container">
@@ -79,11 +82,13 @@ const App = () => {
 
                 </div>
                     
-        
+                <br />
                 <input className="picker-btn" onChange={takeFile} type="file" accept=".pdf" />
             </aside>
 
-            <main className="viewer-container">
+            {/* <main className="viewer-container"> */}
+            <main className="container">
+                {title && (<h2>{title}</h2>)}
                 <div className="viewer-content">
                     <WebViewer key={selectedFile} file={selectedFile} />
                 </div>
