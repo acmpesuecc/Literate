@@ -15,6 +15,10 @@ export default function WebViewer(props) {
     defaultRowHeight: 250,
   });
 
+  const handler = (visibleRows, allRows) => {
+    console.log("Visible rows: ",visibleRows)
+    console.log("All rows",allRows)
+  }
   useEffect(() => {
     if (!isWorkerInitialized || !props.file) {
       return;
@@ -41,13 +45,17 @@ export default function WebViewer(props) {
   }, [isWorkerInitialized, props.file]);
 
   return (
-    <div id="pages">
+    <div id="pages" style={{
+      height: "100vh", 
+      overflow: "hidden"
+      }}>
       {docLoaded && totalPages > 0 && (
         <List
           rowComponent={PageComponent}
           rowCount={totalPages}
           rowHeight={rowHeight}
           rowProps={{ renderPage,structuredText, file: props.file , totalPages}}
+          onRowsRendered = {handler}
         />
       )}
     </div>
