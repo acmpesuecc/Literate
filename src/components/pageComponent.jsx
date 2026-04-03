@@ -24,7 +24,6 @@ export default function PageComponent({ index, renderPage, structuredText, file 
   const containerRef = useRef(null);
 
   useEffect(() => {
-    useStore.getState().setCurrentPage(index)
     let objectUrl;
     renderPage(index, cssWidth, dpr)
       .then(({ pngData, cssHeight, cssScale }) => {
@@ -46,7 +45,7 @@ export default function PageComponent({ index, renderPage, structuredText, file 
 
     //do below logic only if user selects highlight button in options
 
-    if (selection.anchorNode.nodeName==='#text' && selection.focusNode.nodeName==="#text" && 
+    if (!selection.isCollapsed && selection.anchorNode.nodeName==='#text' && selection.focusNode.nodeName==="#text" && 
     selection.rangeCount > 0 && !selection.isCollapsed) {
       const boundingRect = selection.getRangeAt(0).getBoundingClientRect()
       //make div showing options ot highlight stuff, maybe annotate etc
