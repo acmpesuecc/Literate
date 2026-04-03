@@ -3,6 +3,7 @@ import TextOverlay from "./TextOverlay"
 import HighlightOverlay from "./HighlightOverlay"
 import Menu from "./Menu"
 import handleHighlightCollision from "../helpers/handleHighlightCollision"
+import { useStore } from "../store";
 
 const dpr = window.devicePixelRatio || 1;
 const cssWidth = 800; //fixed for now
@@ -15,7 +16,7 @@ const cssWidth = 800; //fixed for now
 //first lay img, then overlay text, finally overlay the highlights
 export default function PageComponent({ index, renderPage, structuredText, file }) {
   const [url, setUrl] = useState(null);
-  const [highlights, setHighlights] = useState([])
+  const highlights = useStore((state) => state.highlights)
   const [textData, setTextData] = useState(null);
   const [cssHeight, setCssHeight] = useState(0);
   const [cssScale, setCssScale] = useState(null);
@@ -23,6 +24,7 @@ export default function PageComponent({ index, renderPage, structuredText, file 
   const containerRef = useRef(null);
 
   useEffect(() => {
+    useStore.getState().setCurrentPage(index)
     let objectUrl;
     renderPage(index, cssWidth, dpr)
       .then(({ pngData, cssHeight, cssScale }) => {
@@ -41,7 +43,6 @@ export default function PageComponent({ index, renderPage, structuredText, file 
 
   const handleSelection = ()=>{
     const selection = window.getSelection();
-    console.log(selection)
 
     //do below logic only if user selects highlight button in options
 
@@ -141,8 +142,8 @@ const handleHighlight = () => {
 
         // collision handling
         const segments = handleHighlightCollision(newHighlight, highlights);
-
-        setHighlights(prev => [...prev, ...segments]);
+        
+        useStore.getState().setHighlights([...highlights,...segments])
       }
     }
   }
