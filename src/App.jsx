@@ -2,7 +2,7 @@ import React from 'react'
 import {Outlet} from 'react-router'
 import WebViewer from "@/components/WebViewer.jsx";
 import { useState } from "react";
-import { useStore } from './store';
+import { useStore } from './store.js';
 
 import {
   DrivePicker,
@@ -16,19 +16,21 @@ const App = () => {
 
     const [selectedFile, setSelectedFile] = useState(null);
 
+    const title = useStore((state) => state.Title);
+    console.log(title);
+
     const takeFile = (e) => {
         const file = e.target.files[0];
 
         if (file) {
             useStore.getState().setTitle(file.name)
+            // setTitle(file.name);
             URL.revokeObjectURL(selectedFile);
             const url = URL.createObjectURL(file);
             console.log("file opening...");
             setSelectedFile(url);
         }
     };
-
-    const title = useStore((state) => state.title);
 
     return (
         <div className="app-container">
@@ -89,7 +91,11 @@ const App = () => {
 
             {/* <main className="viewer-container"> */}
             <main className="container">
-                {title && (<h2>{title}</h2>)}
+                {title && (
+                    <div className="viewer-header">
+                        <h2>Title:{title}</h2>
+                    </div>
+                )}
                 <div className="viewer-content">
                     <WebViewer key={selectedFile} file={selectedFile} />
                 </div>

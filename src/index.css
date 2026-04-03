@@ -126,6 +126,16 @@ p, ul , h1
   min-height: 100%;
 }
 
+.viewer-header {
+  padding: 20px 30px;
+  background-color: var(--teal-bg);
+  color: white;
+  font-size: 1.2rem;
+  border-bottom: 1px solid var(--border-light);
+  position: relative;
+  z-index: 10;
+}
+
 
 /* From Uiverse.io by Cobp */ 
 .container {

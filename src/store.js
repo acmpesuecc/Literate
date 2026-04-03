@@ -1,8 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-export const useStore = create
-    ((set,get) => ({
+export const useStore = create((set,get) => ({
         currentPDFid: null,
         Title: "",
         currentPage: 0,
@@ -15,7 +14,6 @@ export const useStore = create
         },
         setCurrentPage: (index) => {
             set({currentPage:index})
-            
         },
         setHighlights: (pdfHighlights) => {
             set({highlights:pdfHighlights})
