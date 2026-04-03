@@ -4,6 +4,8 @@ import { List, useDynamicRowHeight } from "react-window";
 
 import PageComponent from "./pageComponent.jsx";
 
+import {useStore} from "../store.js"
+
 export default function WebViewer(props) {
   const [docLoaded, setDocLoaded] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
@@ -15,6 +17,14 @@ export default function WebViewer(props) {
     defaultRowHeight: 250,
   });
 
+  const handler = (visibleRows) => {
+    if (visibleRows.stopIndex === 0) return; // not ready yet
+
+    const currentPage = useStore.getState().currentPage
+    if(currentPage!== visibleRows.startIndex){
+      useStore.getState().setCurrentPage(visibleRows.startIndex)
+    }
+  }
   useEffect(() => {
     if (!isWorkerInitialized || !props.file) {
       return;
@@ -41,13 +51,17 @@ export default function WebViewer(props) {
   }, [isWorkerInitialized, props.file]);
 
   return (
-    <div id="pages">
+    <div id="pages" style={{
+      height: "100vh", 
+      overflow: "hidden"
+      }}>
       {docLoaded && totalPages > 0 && (
         <List
           rowComponent={PageComponent}
           rowCount={totalPages}
           rowHeight={rowHeight}
           rowProps={{ renderPage,structuredText, file: props.file , totalPages}}
+          onRowsRendered = {handler}
         />
       )}
     </div>

@@ -2,6 +2,7 @@ import { Dexie } from "dexie"
 
 export const db = new Dexie("IndexedDB")
 db.version(1).stores({
-  pdf: "++id, title, pg",
-  highlight:"++id,pg,para,wordlen",
+  pdfs: "++id, currentpdf, title, pg",
+  highlights:"++id,pdfID,page,block,line,startOffset,endOffset",
+  meta:"++id,recentpdf",
 })

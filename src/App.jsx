@@ -2,7 +2,7 @@ import React from 'react'
 import {Outlet} from 'react-router'
 import WebViewer from "@/components/WebViewer.jsx";
 import { useState } from "react";
-import { useStore } from "store.js";
+import { useStore } from './store';
 
 import {
   DrivePicker,
@@ -20,6 +20,7 @@ const App = () => {
         const file = e.target.files[0];
 
         if (file) {
+            useStore.getState().setTitle(file.name)
             URL.revokeObjectURL(selectedFile);
             const url = URL.createObjectURL(file);
             console.log("file opening...");
