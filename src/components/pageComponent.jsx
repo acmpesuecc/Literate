@@ -68,9 +68,24 @@ export default function PageComponent({ index, renderPage, structuredText, file 
 
     }
   }
+  const getLastLine = (page, block) => {
+    let line = 0;
+    while (document.getElementById(`${page}-${block}-${line + 1}`)) {
+      line++;
+    }
+    return line;
+  };
+  const getLastBlock = (page) => {
+    let block = 0;
+    while (document.getElementById(`${page}-${block + 1}-0`)) {
+      block++;
+    }
+    return block;
+  };
 const handleHighlight = () => {
   const selection = window.getSelection();
-  
+  if (!selection || selection.isCollapsed) return;
+
   let startLineSpan, endLineSpan, selectionStartOffset, selectionEndOffset;
 
   if (selection.direction === "forward") {
@@ -93,8 +108,8 @@ const handleHighlight = () => {
   startArr = startLineSpan.id.split("-");
   endArr = endLineSpan.id.split("-");
 
-  if (startArr.length !== 3) console.error("improper formatting for start span");
-  if (endArr.length !== 3) console.error("Improper formatting for end span");
+  if (startArr.length !== 3) { console.error("improper formatting for start span"); return; }
+  if (endArr.length !== 3) { console.error("Improper formatting for end span"); return; }
 
   startIndex = Number(startArr[0]);
   endIndex = Number(endArr[0]);
@@ -105,48 +120,48 @@ const handleHighlight = () => {
   startLine = Number(startArr[2]);
   endLine = Number(endArr[2]);
 
-  // iterate through selection
+  let totalHighlights = [...highlights];
+
+  //iterate through selection
   for (let page = startIndex; page <= endIndex; page++) {
-    for (let block = startBlock; block <= endBlock; block++) {
-      console.log("at block:", block, "endblock:", endBlock);
+    const blockStart = page === startIndex ? startBlock : 0;
+    const blockEnd = page === endIndex ? endBlock : getLastBlock(page);
 
-      for (let line = startLine; line <= endLine; line++) {
-        console.log("at line", line, "endLine", endLine);
+    for (let block = blockStart; block <= blockEnd; block++) {
+      const lineStart = (page === startIndex && block === startBlock) ? startLine : 0;
+      const lineEnd = (page === endIndex && block === endBlock) ? endLine : getLastLine(page, block);
 
-        let startOffset, endOffset;
+      for (let line = lineStart; line <= lineEnd; line++) {
+        const isFirstSpan = page === startIndex && block === startBlock && line === startLine;
+        const isLastSpan = page === endIndex && block === endBlock && line === endLine;
 
-        if (line === startLine) {
-          startOffset = selectionStartOffset;
-        } else {
-          startOffset = 0;
-        }
+        const startOffset = isFirstSpan ? selectionStartOffset : 0;
+        const endOffset = isLastSpan
+          ? selectionEndOffset
+          : document.getElementById(`${page}-${block}-${line}`)?.firstChild?.length ?? 0;
 
-        if (line === endLine) {
-          endOffset = selectionEndOffset;
-        } else {
-          endOffset = document.getElementById(
-            `${page}-${block}-${line}`
-          ).firstChild.length;
-        }
+        if (startOffset === endOffset) continue;
 
-        const newHighlight = {
-          page,
-          block,
-          line,
-          startOffset,
+        const newHighlight = { 
+          page, 
+          block, 
+          line, 
+          startOffset, 
           endOffset,
         };
 
         console.log(newHighlight);
 
         // collision handling
-        const segments = handleHighlightCollision(newHighlight, highlights);
-        
-        useStore.getState().setHighlights([...highlights,...segments])
+        const segments = handleHighlightCollision(newHighlight, totalHighlights);
+
+        totalHighlights = [...totalHighlights, ...segments];
       }
     }
   }
-  setMenuPos(null)
+  useStore.getState().setHighlights(totalHighlights);
+  setMenuPos(null);
+
   //gets rid of that annoying bug where menu remains open till user clicks outside page
   setTimeout(() => {
     window.getSelection().removeAllRanges();
