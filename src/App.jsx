@@ -1,7 +1,6 @@
-import React from 'react'
 import {Outlet} from 'react-router'
 import WebViewer from "@/components/WebViewer.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useStore } from './store.js';
 
 import {
@@ -18,6 +17,10 @@ const App = () => {
 
     const title = useStore((state) => state.Title);
     console.log(title);
+
+    useEffect(() => {
+        useStore.getState().setTitle("");
+    }, []);
 
     const takeFile = (e) => {
         const file = e.target.files[0];
