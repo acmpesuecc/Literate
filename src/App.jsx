@@ -3,6 +3,10 @@ import WebViewer from "@/components/WebViewer.jsx";
 import { useState, useEffect } from "react";
 import { useStore } from './store.js';
 
+import hydrate from "./helpers/hydrate.js"
+
+import {db} from "./db.js"
+
 import {
   DrivePicker,
   DrivePickerDocsView,
@@ -13,25 +17,79 @@ const App = () => {
     const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 	const APP_ID = import.meta.env.VITE_GOOGLE_APP_ID;
 
-    const [selectedFile, setSelectedFile] = useState(null);
 
     const title = useStore((state) => state.Title);
-    console.log(title);
+    const currentPDFid = useStore((state)=>state.currentPDFid)
+    const blob = useStore((state)=>state.blob)
 
-    useEffect(() => {
-        useStore.getState().setTitle("");
-    }, []);
+    if(title) console.log(title);
+    if(currentPDFid) console.log(currentPDFid)
+    if(blob) console.log(blob)
+    useEffect(()=>{
+        // when page loads, check if meta table entry exist, if yes, refresh and load from indexedDV
+        async function rehydrate(pdfID) {
+            const [currentPDF, highlights] = await Promise.all([
+                db.pdfs.get(pdfID),
+                db.highlights.where("pdfID").equals(pdfID).toArray()
+            ]);
 
-    const takeFile = (e) => {
+            console.log("currently opened pdf", currentPDF);
+            useStore.getState().setTitle(currentPDF.title);
+            useStore.getState().setCurrentPDF(currentPDF.id);
+            useStore.getState().setBlob(currentPDF.blob);
+
+            console.log("Highlights from db", highlights);
+            const storeHighlights = highlights.map((h) => ({
+                page: h.page,
+                block: h.block,
+                line: h.line,
+                startOffset: h.startOffset,
+                endOffset: h.endOffset,
+            }));
+            useStore.getState().setHighlights(storeHighlights);
+        }
+        async function initSession(){
+            const sessionActive = sessionStorage.getItem('pdf_session_active');
+            if(!sessionActive){
+                //new session, sessionStorage persists on refresh but not on tab closes, ill treat tab close as user wanting to close app
+                await db.meta.clear()
+                sessionStorage.setItem('pdf_session_active', 'true');
+                console.log("New session: Meta table cleared.");
+            }
+            else{
+                //refresh, restore previous active session
+                console.log("Refresh detected: Keeping meta data.");
+                await db.meta.toCollection().first()
+                .then(async (id)=>{
+                    if(id){
+                        //rehydrate store back
+                        const metaEntry = await db.meta.get(id)
+                        console.log("metaEntry: ", metaEntry)
+                        await rehydrate(metaEntry.recentPDFID)
+                    }
+                    //else no pdf was loaded before, put to meta when user chooses a pdf
+                })
+            }
+        }
+        initSession()
+        .catch(err=>console.error(err))
+
+    },[])
+    const takeFile = async (e) => {
         const file = e.target.files[0];
 
+        //check if file exists by name, if not, add to table
         if (file) {
             useStore.getState().setTitle(file.name)
             // setTitle(file.name);
-            URL.revokeObjectURL(selectedFile);
-            const url = URL.createObjectURL(file);
+
+            //create pdf entry if not exist
+
+            //async store file name and file blob
+            useStore.getState().setBlob(file)
             console.log("file opening...");
-            setSelectedFile(url);
+            
+            await hydrate(file.name, file)
         }
     };
 
@@ -64,10 +122,11 @@ const App = () => {
                                     
                                     const arrayBuffer = await response.arrayBuffer();
                                     const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-                                    const url = URL.createObjectURL(blob);
-                                    URL.revokeObjectURL(selectedFile);
-                                    setSelectedFile(url);
+
+                                    useStore.getState().setBlob(blob)
+
                                     useStore.getState().setTitle(pickedData.docs[0].name);
+                                    await hydrate(pickedData.docs[0].name, blob)
                                 } catch (error) {
                                     console.error('Error downloading PDF:', error);
                                 }
@@ -102,7 +161,10 @@ const App = () => {
                     </div>
                 )}
                 <div className="viewer-content">
-                    <WebViewer key={selectedFile} file={selectedFile} />
+                    {currentPDFid && currentPDFid!==undefined && (
+                        <WebViewer key={currentPDFid} currentPDFid={currentPDFid} blob={blob}/>
+                        )
+                    }
                 </div>
             </main>
         </div>

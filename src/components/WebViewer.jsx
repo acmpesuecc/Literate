@@ -26,7 +26,7 @@ export default function WebViewer(props) {
     }
   }
   useEffect(() => {
-    if (!isWorkerInitialized || !props.file) {
+    if (!isWorkerInitialized || !props.blob) {
       return;
     }
 
@@ -35,8 +35,7 @@ export default function WebViewer(props) {
 
     // load the document and then load the pages
     const init = async () => {
-      const response = await fetch(props.file);
-      const arrayBuffer = await response.arrayBuffer();
+      const arrayBuffer = await props.blob.arrayBuffer();
       await loadDocument(arrayBuffer);
 
       const total = await countPages().catch(console.error);
@@ -48,20 +47,16 @@ export default function WebViewer(props) {
     init()
       .then((res) => console.log("Initialized PDF document state: ", res))
       .catch((err) => console.error(err));
-  }, [isWorkerInitialized, props.file]);
+  }, [isWorkerInitialized, props.blob]);
 
   return (
-    <div id="pages" style={{
-      height: "100vh", 
-      overflow: "hidden"
-      }}>
+    <div id="pages">
       {docLoaded && totalPages > 0 && (
         <List
           rowComponent={PageComponent}
           rowCount={totalPages}
           rowHeight={rowHeight}
-          rowProps={{ renderPage,structuredText, file: props.file , totalPages}}
-          onRowsRendered = {handler}
+          rowProps={{ renderPage,structuredText, totalPages, pdfID: props.currentPDFid}}
         />
       )}
     </div>
