@@ -23,13 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 
-.zed
-.vscode
-.venv
-.anitgravity
-
-
-.zed
-.vscode
-.venv
-.anitgravity
+.env
